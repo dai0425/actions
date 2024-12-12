@@ -1,0 +1,49 @@
+name: put-s3-action
+on:
+  workflow_dispatch:
+
+jobs:
+  putS3:
+    runs-on: ubuntu-larger-runner-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+    steps:
+      - run: cat $GITHUB_EVENT_PATH
+      - run: lsb_release -d
+      - run: gh --version
+      - run: aws --version
+      - uses: actions/checkout@v4 #リポジトリのコードをlargerrunnerに複製
+      - name: Set environment variables
+        env:
+          ENV_NAME: ${{ vars.ENV_NAME }}
+          OIDC_ROLE_ARN: ${{ vars.OIDC_ROLE_ARN }}
+        run: |
+          echo "ENV_NAME=${{ env.ENV_NAME }}" >> $GITHUB_ENV
+          echo "ENV_NAME=${{ env.ENV_NAME }}"
+          echo "OIDC_ROLE_ARN=${{ env.OIDC_ROLE_ARN }}" >> $GITHUB_ENV
+          echo "OIDC_ROLE_ARN=${{ env.OIDC_ROLE_ARN }}"
+      - name: assume-role
+        id: assume-role
+        uses: ./.github/workflows/assume-role
+        with:
+          oidc-role-arn: ${{ env.OIDC_ROLE_ARN }}
+          deploy-role-arn: "arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/pds-cdk-deploy-role-ap-northeast-1"
+      - run: ls -la
+      - run: rm -rf README.md docs
+      - run: find . -type f -name "*.png" -exec rm {} + #ディレクトリ配下のpngで終わる識別子を削除する
+      - run: ls -la
+      - run: chmod +x .github/workflows/shell/zip.sh
+      - run: .github/workflows/shell/zip.sh
+      - run: ls -la
+      - run: chmod +x .github/workflows/shell/put_s3.sh
+      - run: .github/workflows/shell/put_s3.sh ${{ vars.ENV_NAME }}
+
+
+
+
+
