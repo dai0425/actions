@@ -10,5 +10,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check allowed user with contains
-        if: contains(secrets.ALLOWEDUSER, github.actor)
+        if: contains(vars.ALLOWEDUSER, github.actor)
         run: echo "Hello"
