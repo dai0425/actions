@@ -6,7 +6,7 @@ on:
       - main # マージ先のブランチを指定
 
 jobs:
-  unit-test-job:
+  hellojob:
     runs-on: ubuntu-latest
     steps:
       - name: Check allowed user with contains
