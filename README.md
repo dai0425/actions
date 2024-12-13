@@ -1,4 +1,6 @@
-# githubactionsのテスト
+# github actinosの調査
 
 ## やりたいこと
-プルリクエストでの処理の変化
+githubでuserが限定的な状態でのプルリクエスト
+
+
