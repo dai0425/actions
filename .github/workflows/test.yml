@@ -1,11 +1,14 @@
-name: Test Workflow
+name: Run Job on PR Merge
 
-# pull requestのたびにWorkflow発火する
-on: pull_request
+on:
+  push:
+    branches:
+      - main # マージ先のブランチを指定
 
 jobs:
   unit-test-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Print Hello
+      - name: Check allowed user with contains
+        if: contains(secrets.ALLOWEDUSER, github.actor)
         run: echo "Hello"
