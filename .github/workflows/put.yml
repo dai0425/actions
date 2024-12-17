@@ -1,0 +1,14 @@
+name: put merge
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  hellojob:
+    runs-on: ubuntu-latest
+    environment: prd
+    steps:
+      - name: Check allowed user with contains
+        if: contains(vars.ALLOWEDUSER, github.actor)
+        run: echo "Hello"
